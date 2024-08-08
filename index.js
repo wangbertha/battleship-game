@@ -33,10 +33,10 @@ function Gameboard(inputSize) {
 
     function insertShip(playerShip, [startX, startY], direction) {
         tempBoard = insertShipInBoard(board, playerShip, [startX, startY], direction);
-        if (tempBoard) {
+        if (Array.isArray(tempBoard)) {
             board = tempBoard;
         }
-        return board;
+        return tempBoard;
     }
 
     function insertShipInBoard(playerBoard, playerShip, [startX, startY], direction) {
@@ -56,6 +56,9 @@ function Gameboard(inputSize) {
                 if (indexX<0 || indexX>=tempBoard.length) {
                     return new RangeError('Error: Ship is not placed within the Gameboard');
                 }
+                if (tempBoard[indexX][startY][SHIP_INDEX]) {
+                    return new RangeError('Error: There is already a ship there!')
+                }
                 tempBoard[indexX][startY][SHIP_INDEX] = playerShip;
             }
         }
@@ -64,6 +67,9 @@ function Gameboard(inputSize) {
                 const indexY = startY + (i*mover);
                 if (indexY<0 || indexY>=tempBoard.length) {
                     return new RangeError('Error: Ship is not placed within the Gameboard');
+                }
+                if (tempBoard[startX][indexY][SHIP_INDEX]) {
+                    return new RangeError('Error: There is already a ship there!')
                 }
                 tempBoard[startX][indexY][SHIP_INDEX] = playerShip;
             }
