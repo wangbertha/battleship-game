@@ -1,5 +1,5 @@
-function Ship(setLength) {
-    let length = setLength;
+function Ship(shipLength) {
+    let length = shipLength;
     let hitCount = null;
 
     function hit() {
@@ -32,7 +32,7 @@ function Gameboard() {
         return tempBoard;
     }
 
-    function insertShip() {
+    function insertShip(shipLength) {
 
     }
 
@@ -40,7 +40,7 @@ function Gameboard() {
         
     }
 
-    return { receiveAttack, insertShip };
+    return { insertShip, receiveAttack };
 }
 
 module.exports = {
