@@ -125,11 +125,11 @@ function Gameboard(inputSize) {
         return { board: tempBoard, ships: playerShips, hit: false, sunk: false };
     }
 
-    return { insertShip, receiveAttack };
+    return { board, insertShip, receiveAttack };
 }
 
 function RealPlayer() {
-    const gameBoard = Gameboard();
+    const gameBoard = Gameboard(10);
     const ships = {
         carrier: Ship(5),
         battleship: Ship(4),
@@ -142,7 +142,7 @@ function RealPlayer() {
 }
 
 function ComputerPlayer() {
-    const gameBoard = Gameboard();
+    const gameBoard = Gameboard(10);
     const ships = {
         carrier: Ship(5),
         battleship: Ship(4),
@@ -154,9 +154,17 @@ function ComputerPlayer() {
     return { gameBoard, ships };
 }
 
-module.exports = {
+function BattleshipGame() {
+    const realPlayer = RealPlayer();
+    const computerPlayer = ComputerPlayer();
+
+    return { realPlayer, computerPlayer };
+}
+
+export {
     Ship,
     Gameboard,
     RealPlayer,
-    ComputerPlayer
-}
+    ComputerPlayer,
+    BattleshipGame
+};

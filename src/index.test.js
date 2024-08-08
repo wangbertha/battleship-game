@@ -1,4 +1,4 @@
-const { Ship, Gameboard, RealPlayer, ComputerPlayer } = require('./index');
+const { Ship, Gameboard, RealPlayer, ComputerPlayer } = require('./battleshipGame');
 
 const ship0 = Ship(3);
 ship0.hit()
