@@ -16,9 +16,8 @@ function Ship(shipLength) {
     return { length, hit, isSunk };
 }
 
-function Gameboard() {
-    const boardSize = 4;
-    let board = buildBoard(boardSize);
+function Gameboard(inputSize) {
+    let board = buildBoard(inputSize);
 
     function buildBoard(size) {
         let tempBoard = [];
@@ -32,24 +31,44 @@ function Gameboard() {
         return tempBoard;
     }
 
-    function insertShip(ship, [startX, startY], direction) {
-        if (typeof ship !== typeof Ship()) {
-            return null;
+    function insertShip(playerShip, [startX, startY], direction) {
+        tempBoard = insertShipInBoard(board, playerShip, [startX, startY], direction);
+        if (tempBoard) {
+            board = tempBoard;
+        }
+        return board;
+    }
+
+    function insertShipInBoard(playerBoard, playerShip, [startX, startY], direction) {
+        if (typeof playerShip !== typeof Ship()) {
+            return TypeError('Error: Ship is not of Ship type');
+        }
+        let tempBoard = [];
+        for (let i=0; i<playerBoard.length; i++) {
+            tempBoard[i] = playerBoard[i].slice();
         }
         const SHIP_INDEX = 1;
         let mover;
         (direction==='left' || direction==='down') ? mover = -1 : mover = 1;
         if (direction==='left' || direction==='right') {
-            for (let i=0; i<ship.length; i++) {
-                board[startX+(i*mover)][startY][SHIP_INDEX] = ship;
+            for (let i=0; i<playerShip.length; i++) {
+                const indexX = startX + (i*mover);
+                if (indexX<0 || indexX>=tempBoard.length) {
+                    return new RangeError('Error: Ship is not placed within the Gameboard');
+                }
+                tempBoard[indexX][startY][SHIP_INDEX] = playerShip;
             }
         }
         else {
-            for (let i=0; i<ship.length; i++) {
-                board[startX][startY+(i*mover)][SHIP_INDEX] = ship;
+            for (let i=0; i<playerShip.length; i++) {
+                const indexY = startY + (i*mover);
+                if (indexY<0 || indexY>=tempBoard.length) {
+                    return new RangeError('Error: Ship is not placed within the Gameboard');
+                }
+                tempBoard[startX][indexY][SHIP_INDEX] = playerShip;
             }
         }
-        return board;
+        return tempBoard;
     }
 
     function receiveAttack([x, y]) {
