@@ -1,6 +1,6 @@
 function Ship(shipLength) {
     let length = shipLength;
-    let hitCount = null;
+    let hitCount = 0;
 
     function hit() {
         hitCount++;
@@ -128,7 +128,35 @@ function Gameboard(inputSize) {
     return { insertShip, receiveAttack };
 }
 
+function RealPlayer() {
+    const gameBoard = Gameboard();
+    const ships = {
+        carrier: Ship(5),
+        battleship: Ship(4),
+        cruiser: Ship(3),
+        submarine: Ship(3),
+        destroyer: Ship(2)
+    }
+
+    return { gameBoard, ships };
+}
+
+function ComputerPlayer() {
+    const gameBoard = Gameboard();
+    const ships = {
+        carrier: Ship(5),
+        battleship: Ship(4),
+        cruiser: Ship(3),
+        submarine: Ship(3),
+        destroyer: Ship(2)
+    }
+
+    return { gameBoard, ships };
+}
+
 module.exports = {
     Ship,
-    Gameboard
+    Gameboard,
+    RealPlayer,
+    ComputerPlayer
 }
