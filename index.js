@@ -17,7 +17,7 @@ function Ship(shipLength) {
 }
 
 function Gameboard() {
-    const boardSize = 10;
+    const boardSize = 4;
     let board = buildBoard(boardSize);
 
     function buildBoard(size) {
@@ -32,11 +32,27 @@ function Gameboard() {
         return tempBoard;
     }
 
-    function insertShip(shipLength) {
-        
+    function insertShip(ship, [startX, startY], direction) {
+        if (typeof ship !== typeof Ship()) {
+            return null;
+        }
+        const SHIP_INDEX = 1;
+        let mover;
+        (direction==='left' || direction==='down') ? mover = -1 : mover = 1;
+        if (direction==='left' || direction==='right') {
+            for (let i=0; i<ship.length; i++) {
+                board[startX+(i*mover)][startY][SHIP_INDEX] = ship;
+            }
+        }
+        else {
+            for (let i=0; i<ship.length; i++) {
+                board[startX][startY+(i*mover)][SHIP_INDEX] = ship;
+            }
+        }
+        return board;
     }
 
-    function receiveAttack([i, j]) {
+    function receiveAttack([x, y]) {
         
     }
 
