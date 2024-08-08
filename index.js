@@ -33,7 +33,7 @@ function Gameboard() {
     }
 
     function insertShip(shipLength) {
-
+        
     }
 
     function receiveAttack([i, j]) {
