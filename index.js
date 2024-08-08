@@ -18,6 +18,7 @@ function Ship(shipLength) {
 
 function Gameboard(inputSize) {
     let board = buildBoard(inputSize);
+    let ships = [];
 
     function buildBoard(size) {
         let tempBoard = [];
@@ -31,22 +32,33 @@ function Gameboard(inputSize) {
         return tempBoard;
     }
 
-    function insertShip(playerShip, [startX, startY], direction) {
-        tempBoard = insertShipInBoard(board, playerShip, [startX, startY], direction);
-        if (Array.isArray(tempBoard)) {
-            board = tempBoard;
+    function deepcopyBoard(copyBoard) {
+        let tempBoard = buildBoard(copyBoard.length);
+        for (let i=0; i<copyBoard.length; i++) {
+            for (let j=0; j<copyBoard[0].length; j++) {
+                for (let k=0; k<copyBoard[0][0].length; k++) {
+                    tempBoard[i][j][k] = copyBoard[i][j][k];
+                }
+            }
         }
         return tempBoard;
+    }
+
+    function insertShip(playerShip, [startX, startY], direction) {
+        const insertResult = insertShipInBoard(board, playerShip, [startX, startY], direction);
+        if (Array.isArray(insertResult)) {
+            board = insertResult;
+            ships.push(playerShip);
+            return { board: insertResult, ships: ships };
+        }
+        return insertResult;
     }
 
     function insertShipInBoard(playerBoard, playerShip, [startX, startY], direction) {
         if (typeof playerShip !== typeof Ship()) {
             return TypeError('Error: Ship is not of Ship type');
         }
-        let tempBoard = [];
-        for (let i=0; i<playerBoard.length; i++) {
-            tempBoard[i] = playerBoard[i].slice();
-        }
+        let tempBoard = deepcopyBoard(playerBoard);
         const SHIP_INDEX = 1;
         let mover;
         (direction==='left' || direction==='down') ? mover = -1 : mover = 1;
@@ -78,7 +90,39 @@ function Gameboard(inputSize) {
     }
 
     function receiveAttack([x, y]) {
-        
+        const attackResult = receiveAttackInBoard(board, ships, [x, y]);
+        if (attackResult.board) {
+            board = attackResult.board;
+            ships = attackResult.ships;
+            if (attackResult.ships.length===0) {
+                return 'Player wins!';
+            }
+        }
+        return attackResult;
+    }
+
+    function receiveAttackInBoard(playerBoard, playerShips, [x, y]) {
+        let tempBoard = deepcopyBoard(playerBoard);
+        if (x<0 || x>=tempBoard.length || y<0 || y>tempBoard.length) {
+            return new RangeError('Error: Attack is not within the Gameboard');
+        }
+        const initialSpace = tempBoard[x][y];
+        const ATTACKED_INDEX = 0;
+        const SHIP_INDEX = 1;
+        if (initialSpace[ATTACKED_INDEX]) {
+            return new RangeError('Error: There was already an attack there!')
+        }
+        tempBoard[x][y][ATTACKED_INDEX] = true;
+        if (initialSpace[SHIP_INDEX]) {
+            const ship = initialSpace[SHIP_INDEX];
+            ship.hit();
+            if (ship.isSunk()) {
+                let newShips = playerShips.filter((s) => s !== ship);
+                return { board: tempBoard, ships: newShips, hit: true, sunk: true }
+            }
+            return { board: tempBoard, ships: playerShips, hit: true, sunk: false }
+        }
+        return { board: tempBoard, ships: playerShips, hit: false, sunk: false };
     }
 
     return { insertShip, receiveAttack };
