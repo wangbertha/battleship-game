@@ -58,32 +58,34 @@ function Gameboard(inputSize) {
         if (typeof playerShip !== typeof Ship()) {
             return TypeError('Error: Ship is not of Ship type');
         }
+        const x = parseInt(startX);
+        const y = parseInt(startY);
         let tempBoard = deepcopyBoard(playerBoard);
         const SHIP_INDEX = 1;
         let mover;
         (direction==='left' || direction==='down') ? mover = -1 : mover = 1;
         if (direction==='left' || direction==='right') {
             for (let i=0; i<playerShip.length; i++) {
-                const indexX = startX + (i*mover);
+                const indexX = x + (i*mover);
                 if (indexX<0 || indexX>=tempBoard.length) {
                     return new RangeError('Error: Ship is not placed within the Gameboard');
                 }
-                if (tempBoard[indexX][startY][SHIP_INDEX]) {
+                if (tempBoard[indexX][y][SHIP_INDEX]) {
                     return new RangeError('Error: There is already a ship there!')
                 }
-                tempBoard[indexX][startY][SHIP_INDEX] = playerShip;
+                tempBoard[indexX][y][SHIP_INDEX] = playerShip;
             }
         }
         else {
             for (let i=0; i<playerShip.length; i++) {
-                const indexY = startY + (i*mover);
+                const indexY = y + (i*mover);
                 if (indexY<0 || indexY>=tempBoard.length) {
                     return new RangeError('Error: Ship is not placed within the Gameboard');
                 }
-                if (tempBoard[startX][indexY][SHIP_INDEX]) {
+                if (tempBoard[x][indexY][SHIP_INDEX]) {
                     return new RangeError('Error: There is already a ship there!')
                 }
-                tempBoard[startX][indexY][SHIP_INDEX] = playerShip;
+                tempBoard[x][indexY][SHIP_INDEX] = playerShip;
             }
         }
         return tempBoard;
