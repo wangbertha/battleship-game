@@ -10,8 +10,34 @@ function renderGame(bsG) {
     gameWrapper.classList.add('game-wrapper');
     body.appendChild(gameWrapper);
 
-    renderPlayer(realPlayer, 'rp');
-    renderPlayer(computerPlayer, 'cp');
+    renderRealPlayer(realPlayer, 'rp');
+    renderComputerPlayer(computerPlayer, 'cp');
+}
+
+function renderRealPlayer(realPlayer, tag) {
+    renderPlayer(realPlayer, tag);
+    renderBoard(realPlayer, tag);
+    renderShips(realPlayer, tag);
+}
+
+function renderComputerPlayer(computerPlayer, tag) {
+    renderPlayer(computerPlayer, tag);
+    renderBoard(computerPlayer, tag);
+    for (const ship of Object.values(computerPlayer.ships)) {
+        let needToFill = true;
+        let x;
+        let y;
+        while (needToFill) {
+            x = Math.floor(Math.random()*9);
+            y = Math.floor(Math.random()*9);
+            let result = computerPlayer.gameBoard.insertShip(ship, [x, y], 'right')
+            if (result.board) {
+                needToFill = false;
+            }
+        }
+    }
+
+    renderAttackMode(computerPlayer, tag);
 }
 
 function renderPlayer(player, tag) {
@@ -19,8 +45,6 @@ function renderPlayer(player, tag) {
     const playerWrapper = document.createElement('div');
     playerWrapper.classList.add('player-wrapper',tag)
     gameWrapper.appendChild(playerWrapper);
-    renderBoard(player, tag);
-    renderShips(player, tag);
 }
 
 function renderBoard(player, tag) {
@@ -128,12 +152,19 @@ function renderAttackMode(player, tag) {
             const [rest, x, y] = elementId.split('-');
             const result = player.gameBoard.receiveAttack([x, y]);
             cell.classList.add('hit');
+            if (result.hit) {
+                cell.classList.add('ship-in-board');
+            }
             if (result==='Player wins!') {
-                alert('You win!');
+                if (tag==='cp') {
+                    alert('You win!');
+                }
+                else {
+                    alert('The computer wins!');
+                }
             }
         })
     }
-    alert('Time to attack!')
 }
 
 const battleshipGame = BattleshipGame();
