@@ -159,6 +159,8 @@ function renderAttackInBoard(player, tag) {
             }
             if (result.win) {
                 alert('You win!');
+                togglePlayAgain();
+                return;
             }
             let needToFill = true;
             let attX;
@@ -181,10 +183,29 @@ function renderAttackInBoard(player, tag) {
             if (resultReal.win) {
                 console.log(resultReal);
                 alert('The computer wins!');
+                togglePlayAgain();
+                return;
             }
         }, { once: true })
     }
 }
 
-const battleshipGame = BattleshipGame();
+function togglePlayAgain() {
+    const body = document.querySelector('body');
+    const playagainWrapper = document.createElement('div');
+    body.appendChild(playagainWrapper);
+
+    const playagainBtn = document.createElement('button');
+    playagainBtn.textContent = 'Play Again?'
+    playagainBtn.addEventListener('click', () => {
+        while (body.firstChild) {
+            body.removeChild(body.lastChild);
+        }
+        battleshipGame = BattleshipGame();
+        renderGame(battleshipGame);
+    })
+    playagainWrapper.appendChild(playagainBtn);
+}
+
+let battleshipGame = BattleshipGame();
 renderGame(battleshipGame);
