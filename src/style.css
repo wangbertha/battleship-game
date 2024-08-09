@@ -1,6 +1,8 @@
-.mode-btn {
-    height: 20px;
-    width: 60px;
+.game-wrapper {
+    display: flex;
+}
+.player-wrapper {
+    padding: 10px;
 }
 .board-cell {
     height: 20px;

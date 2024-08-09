@@ -10,45 +10,51 @@ function renderGame(bsG) {
     gameWrapper.classList.add('game-wrapper');
     body.appendChild(gameWrapper);
 
-    renderPlayer(realPlayer);
+    renderPlayer(realPlayer, 'rp');
+    renderPlayer(computerPlayer, 'cp');
 }
 
-function renderPlayer(player) {
-    renderBoard(player);
-    renderShips(player);
-}
-
-function renderBoard(player) {
-    const board = player.gameBoard;
+function renderPlayer(player, tag) {
     const gameWrapper = document.querySelector('.game-wrapper');
+    const playerWrapper = document.createElement('div');
+    playerWrapper.classList.add('player-wrapper',tag)
+    gameWrapper.appendChild(playerWrapper);
+    renderBoard(player, tag);
+    renderShips(player, tag);
+}
+
+function renderBoard(player, tag) {
+    const gameBoard = player.gameBoard;
+    const playerWrapper = document.querySelector(`.player-wrapper.${tag}`);
     
     const boardWrapper = document.createElement('div');
     boardWrapper.classList.add('board-wrapper');
-    gameWrapper.appendChild(boardWrapper);
+    playerWrapper.appendChild(boardWrapper);
 
-    for (let i=0; i<board.board.length; i++) {
+    for (let i=0; i<gameBoard.board.length; i++) {
         const boardRow = document.createElement('tr');
         boardRow.classList.add('board-row');
-        for (let j=0; j<board.board.length; j++) {
+        for (let j=0; j<gameBoard.board.length; j++) {
             const boardCell = document.createElement('td');
             boardCell.classList.add('board-cell');
-            boardCell.setAttribute('id',`cell-${i}-${j}`);
+            boardCell.setAttribute('id',`${tag}-${i}-${j}`);
             boardCell.addEventListener('dragover', (e) => {
                 e.preventDefault();
             })
             boardCell.addEventListener('drop', (e) => {
                 const id = e.dataTransfer.getData('text');
-                const ship = player.ships[id]
+                const [tag, shipId] = id.split('-');
+                const ship = player.ships[shipId]
                 const draggedElement = document.getElementById(id);
                 const dropId = e.target.id;
-                const [tag, x, y] = dropId.split('-');
+                const [rest, x, y] = dropId.split('-');
                 const direction = 'right';
-                const result = board.insertShip(ship, [x, y], direction).board;
-
+                const result = gameBoard.insertShip(ship, [x, y], direction).board;
+                console.log(result);
                 if (Array.isArray(result)) {
-                    const shipsWrapper = document.querySelector('.ships-wrapper');
+                    const shipsWrapper = playerWrapper.querySelector('.ships-wrapper');
                     shipsWrapper.removeChild(draggedElement);
-                    renderShipInBoard(ship, [x, y], direction);
+                    renderShipInBoard(tag, ship, [x, y], direction);
                     if (!shipsWrapper.hasChildNodes()) {
                         renderAttackMode();
                         console.log('Time to attack!')
@@ -63,13 +69,34 @@ function renderBoard(player) {
     }
 }
 
-function renderShipInBoard(ship, [x, y], direction) {
+function renderShips(player, tag) {
+    const ships = player.ships
+    const playerWrapper = document.querySelector(`.player-wrapper.${tag}`);
+    const shipsWrapper = document.createElement('div');
+    shipsWrapper.classList.add('ships-wrapper');
+    playerWrapper.appendChild(shipsWrapper);
+
+    for (const [key, ship] of Object.entries(ships)) {
+        const shipCell = document.createElement('div');
+        shipCell.textContent = key;
+        shipCell.classList.add('ship');
+        shipCell.setAttribute('id', `${tag}-${key}`);
+        shipCell.setAttribute('draggable','true');
+        shipCell.style.width = (ship.length*22)+'px';
+        shipCell.addEventListener('dragstart', (e) => {
+            e.dataTransfer.setData('text', e.target.id);
+        })
+        shipsWrapper.appendChild(shipCell);
+    }
+}
+
+function renderShipInBoard(tag, ship, [x, y], direction) {
     let mover;
     (direction==='up' || direction==='left') ? mover = -1 : mover = 1;
     if (direction==='up' || direction==='down') {
         for (let i=0; i<ship.length; i++) {
             const indexX = parseInt(x) + (i*mover);
-            const boardCell = document.querySelector(`#cell-${indexX}-${y}`);
+            const boardCell = document.querySelector(`#${tag}-${indexX}-${y}`);
             if (!boardCell) {
                 return new RangeError('Error: Ship is not placed within the Gameboard');
             }
@@ -82,7 +109,7 @@ function renderShipInBoard(ship, [x, y], direction) {
     else {
         for (let i=0; i<ship.length; i++) {
             const indexY = parseInt(y) + (i*mover);
-            const boardCell = document.querySelector(`#cell-${x}-${indexY}`);
+            const boardCell = document.querySelector(`#${tag}-${x}-${indexY}`);
             if (!boardCell) {
                 return new RangeError('Error: Ship is not placed within the Gameboard');
             }
@@ -94,27 +121,5 @@ function renderShipInBoard(ship, [x, y], direction) {
     }
 }
 
-function renderShips(player) {
-    const ships = player.ships
-    const gameWrapper = document.querySelector('.game-wrapper');
-    const shipsWrapper = document.createElement('div');
-    shipsWrapper.classList.add('ships-wrapper');
-    gameWrapper.appendChild(shipsWrapper);
-
-    for (const [key, ship] of Object.entries(ships)) {
-        const shipCell = document.createElement('div');
-        shipCell.textContent = key;
-        shipCell.classList.add('ship');
-        shipCell.setAttribute('id', key);
-        shipCell.setAttribute('draggable','true');
-        shipCell.style.width = (ship.length*22)+'px';
-        shipCell.addEventListener('dragstart', (e) => {
-            e.dataTransfer.setData('text', e.target.id);
-        })
-        shipsWrapper.appendChild(shipCell);
-    }
-}
-
 const battleshipGame = BattleshipGame();
 renderGame(battleshipGame);
-renderAttackMode()
