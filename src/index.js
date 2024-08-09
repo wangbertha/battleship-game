@@ -36,8 +36,6 @@ function renderComputerPlayer(computerPlayer, tag) {
             }
         }
     }
-
-    renderAttackMode(computerPlayer, tag);
 }
 
 function renderPlayer(player, tag) {
@@ -79,7 +77,7 @@ function renderBoard(player, tag) {
                     shipsWrapper.removeChild(draggedElement);
                     renderShipInBoard(tag, ship, [x, y], direction);
                     if (!shipsWrapper.hasChildNodes()) {
-                        renderAttackMode(player, tag);
+                        renderAttackMode(battleshipGame);
                     }
                 }
 
@@ -143,7 +141,11 @@ function renderShipInBoard(tag, ship, [x, y], direction) {
     }
 }
 
-function renderAttackMode(player, tag) {
+function renderAttackMode(btsGame) {
+    renderAttackInBoard(btsGame.computerPlayer, 'cp');
+}
+
+function renderAttackInBoard(player, tag) {
     const playerWrapper = document.querySelector(`.player-wrapper.${tag}`);
     const boardCells = playerWrapper.querySelectorAll('.board-cell');
     for (const cell of boardCells) {
@@ -156,6 +158,7 @@ function renderAttackMode(player, tag) {
                 cell.classList.add('ship-in-board');
             }
             if (result==='Player wins!') {
+                cell.classList.add('ship-in-board');
                 if (tag==='cp') {
                     alert('You win!');
                 }
@@ -163,7 +166,30 @@ function renderAttackMode(player, tag) {
                     alert('The computer wins!');
                 }
             }
-        })
+            let needToFill = true;
+            let attX;
+            let attY;
+            let resultReal;
+            while (needToFill) {
+                attX = Math.floor(Math.random()*10);
+                attY = Math.floor(Math.random()*10);
+                resultReal = battleshipGame.realPlayer.gameBoard.receiveAttack([attX, attY]);
+                if (resultReal.board) {
+                    needToFill = false;
+                }
+            }
+            const realPlayerWrapper = document.querySelector('.player-wrapper.rp');
+            const attCell = realPlayerWrapper.querySelector(`#rp-${attX}-${attY}`);
+            attCell.classList.add('hit');
+            if (resultReal.hit) {
+                attCell.classList.add('ship-in-board');
+            }
+            if (resultReal==='Player wins!') {
+                console.log(resultReal);
+                attCell.classList.add('ship-in-board');
+                alert('The computer wins!');
+            }
+        }, { once: true })
     }
 }
 
