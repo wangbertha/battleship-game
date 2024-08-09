@@ -16,3 +16,9 @@
 .ship-in-board {
     background-color: #a8a8a8;
 }
+.board-cell.hit::after {
+    content: 'X';
+}
+.board-cell.ship-in-board.hit {
+    color: #ff0000;
+}

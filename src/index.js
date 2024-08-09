@@ -43,21 +43,19 @@ function renderBoard(player, tag) {
             })
             boardCell.addEventListener('drop', (e) => {
                 const id = e.dataTransfer.getData('text');
-                const [tag, shipId] = id.split('-');
+                const [rest0, shipId] = id.split('-');
                 const ship = player.ships[shipId]
                 const draggedElement = document.getElementById(id);
                 const dropId = e.target.id;
-                const [rest, x, y] = dropId.split('-');
+                const [rest1, x, y] = dropId.split('-');
                 const direction = 'right';
                 const result = gameBoard.insertShip(ship, [x, y], direction).board;
-                console.log(result);
                 if (Array.isArray(result)) {
                     const shipsWrapper = playerWrapper.querySelector('.ships-wrapper');
                     shipsWrapper.removeChild(draggedElement);
                     renderShipInBoard(tag, ship, [x, y], direction);
                     if (!shipsWrapper.hasChildNodes()) {
-                        renderAttackMode();
-                        console.log('Time to attack!')
+                        renderAttackMode(player, tag);
                     }
                 }
 
@@ -119,6 +117,23 @@ function renderShipInBoard(tag, ship, [x, y], direction) {
             boardCell.classList.add('ship-in-board');
         }
     }
+}
+
+function renderAttackMode(player, tag) {
+    const playerWrapper = document.querySelector(`.player-wrapper.${tag}`);
+    const boardCells = playerWrapper.querySelectorAll('.board-cell');
+    for (const cell of boardCells) {
+        cell.addEventListener('click', (e) => {
+            const elementId = e.target.id;
+            const [rest, x, y] = elementId.split('-');
+            const result = player.gameBoard.receiveAttack([x, y]);
+            cell.classList.add('hit');
+            if (result==='Player wins!') {
+                alert('You win!');
+            }
+        })
+    }
+    alert('Time to attack!')
 }
 
 const battleshipGame = BattleshipGame();
