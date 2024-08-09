@@ -157,14 +157,8 @@ function renderAttackInBoard(player, tag) {
             if (result.hit) {
                 cell.classList.add('ship-in-board');
             }
-            if (result==='Player wins!') {
-                cell.classList.add('ship-in-board');
-                if (tag==='cp') {
-                    alert('You win!');
-                }
-                else {
-                    alert('The computer wins!');
-                }
+            if (result.win) {
+                alert('You win!');
             }
             let needToFill = true;
             let attX;
@@ -184,9 +178,8 @@ function renderAttackInBoard(player, tag) {
             if (resultReal.hit) {
                 attCell.classList.add('ship-in-board');
             }
-            if (resultReal==='Player wins!') {
+            if (resultReal.win) {
                 console.log(resultReal);
-                attCell.classList.add('ship-in-board');
                 alert('The computer wins!');
             }
         }, { once: true })

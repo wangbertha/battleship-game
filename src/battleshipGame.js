@@ -96,9 +96,6 @@ function Gameboard(inputSize) {
         if (attackResult.board) {
             board = attackResult.board;
             ships = attackResult.ships;
-            if (attackResult.ships.length===0) {
-                return 'Player wins!';
-            }
         }
         return attackResult;
     }
@@ -120,11 +117,14 @@ function Gameboard(inputSize) {
             ship.hit();
             if (ship.isSunk()) {
                 let newShips = playerShips.filter((s) => s !== ship);
-                return { board: tempBoard, ships: newShips, hit: true, sunk: true }
+                if (newShips.length===0) {
+                    return { board: tempBoard, ships: newShips, hit: true, sunk: true, win: true };
+                }
+                return { board: tempBoard, ships: newShips, hit: true, sunk: true, win: false };
             }
-            return { board: tempBoard, ships: playerShips, hit: true, sunk: false }
+            return { board: tempBoard, ships: playerShips, hit: true, sunk: false, win: false };
         }
-        return { board: tempBoard, ships: playerShips, hit: false, sunk: false };
+        return { board: tempBoard, ships: playerShips, hit: false, sunk: false, win: false };
     }
 
     return { board, insertShip, receiveAttack };
