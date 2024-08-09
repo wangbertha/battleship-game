@@ -1,5 +1,16 @@
+.mode-btn {
+    height: 20px;
+    width: 60px;
+}
 .board-cell {
     height: 20px;
     width: 20px;
     border: 1px solid #000;
+}
+.ship {
+    height: 18px;
+    border: 0.75px solid #a8a8a8;
+}
+.ship-in-board {
+    background-color: #a8a8a8;
 }
