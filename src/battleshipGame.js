@@ -63,8 +63,8 @@ function Gameboard(inputSize) {
         let tempBoard = deepcopyBoard(playerBoard);
         const SHIP_INDEX = 1;
         let mover;
-        (direction==='left' || direction==='down') ? mover = -1 : mover = 1;
-        if (direction==='left' || direction==='right') {
+        (direction==='up' || direction==='left') ? mover = -1 : mover = 1;
+        if (direction==='up' || direction==='down') {
             for (let i=0; i<playerShip.length; i++) {
                 const indexX = x + (i*mover);
                 if (indexX<0 || indexX>=tempBoard.length) {
