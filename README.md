@@ -1,4 +1,4 @@
-# battleship-game
+# Battleship Game
 
 Play here!
 
