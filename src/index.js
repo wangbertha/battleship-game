@@ -6,9 +6,18 @@ function renderGame(bsG) {
 
     const body = document.querySelector('body');
 
+    const mainWrapper = document.createElement('div');
+    mainWrapper.classList.add('main-wrapper');
+    body.appendChild(mainWrapper);
     const gameWrapper = document.createElement('div');
+    const mainHeading = document.createElement('h2');
+    mainHeading.textContent = 'BATTLESHIP';
+    mainWrapper.appendChild(mainHeading);
+    const instructions = document.createElement('p');
+    instructions.innerHTML = "<strong>Step 1:</strong> Populate your board by dragging your battleships onto the board.<br><strong>Step 2:</strong> Click to attack your opponent's board.<br><strong>Win Conditions:</strong> Successfully attack and sink all of your opponent's ships!";
+    mainWrapper.appendChild(instructions);
     gameWrapper.classList.add('game-wrapper');
-    body.appendChild(gameWrapper);
+    mainWrapper.appendChild(gameWrapper);
 
     renderRealPlayer(realPlayer, 'rp');
     renderComputerPlayer(computerPlayer, 'cp');
@@ -98,11 +107,11 @@ function renderShips(player, tag) {
 
     for (const [key, ship] of Object.entries(ships)) {
         const shipCell = document.createElement('div');
-        shipCell.textContent = key;
+        shipCell.textContent = key.toUpperCase();
         shipCell.classList.add('ship');
         shipCell.setAttribute('id', `${tag}-${key}`);
         shipCell.setAttribute('draggable','true');
-        shipCell.style.width = (ship.length*22)+'px';
+        shipCell.style.width = ((ship.length*22)-2)+'px';
         shipCell.addEventListener('dragstart', (e) => {
             e.dataTransfer.setData('text', e.target.id);
         })
@@ -191,13 +200,15 @@ function renderAttackInBoard(player, tag) {
 }
 
 function togglePlayAgain() {
-    const body = document.querySelector('body');
+    const mainWrapper = document.querySelector('.main-wrapper');
     const playagainWrapper = document.createElement('div');
-    body.appendChild(playagainWrapper);
+    mainWrapper.appendChild(playagainWrapper);
 
     const playagainBtn = document.createElement('button');
     playagainBtn.textContent = 'Play Again?'
+    playagainBtn.classList.add('play-again-btn');
     playagainBtn.addEventListener('click', () => {
+        const body = document.querySelector('body');
         while (body.firstChild) {
             body.removeChild(body.lastChild);
         }

@@ -1,5 +1,20 @@
+body * {
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+.main-wrapper {
+    background-color: #8cc7ff;
+    padding: 30px;
+}
+.main-wrapper h2 {
+    margin-bottom: 10px;
+}
 .game-wrapper {
     display: flex;
+    justify-content: center;
+    padding: 10px;
 }
 .player-wrapper {
     padding: 10px;
@@ -8,17 +23,30 @@
     height: 20px;
     width: 20px;
     border: 1px solid #000;
+    background-color: #fff;
+}
+.ships-wrapper {
+    padding-top: 20px;
 }
 .ship {
-    height: 18px;
-    border: 0.75px solid #a8a8a8;
+    height: 20px;
+    border: 1px solid #a8a8a8;
+    background-color: #3ca1ff;
+    font-size: 10px;
+    align-content: center;
 }
 .ship-in-board {
-    background-color: #a8a8a8;
+    background-color: #51abff;
 }
 .board-cell.hit::after {
-    content: 'X';
+    content: '+';
 }
 .board-cell.ship-in-board.hit {
     color: #ff0000;
+}
+.play-again-btn {
+    padding: 20px;
+    background-color: #3ca1ff;
+    border-radius: 10px;
+    font-size: 20px;
 }
