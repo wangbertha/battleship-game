@@ -34,12 +34,12 @@ function renderComputerPlayer(computerPlayer, tag) {
     renderBoard(computerPlayer, tag);
     for (const ship of Object.values(computerPlayer.ships)) {
         let needToFill = true;
-        let x;
-        let y;
+        const directions = ['right', 'down'];
         while (needToFill) {
-            x = Math.floor(Math.random()*9);
-            y = Math.floor(Math.random()*9);
-            let result = computerPlayer.gameBoard.insertShip(ship, [x, y], 'right')
+            let x = Math.floor(Math.random()*9);
+            let y = Math.floor(Math.random()*9);
+            let direction = Math.floor(Math.random()*2);
+            let result = computerPlayer.gameBoard.insertShip(ship, [x, y], directions[direction]);
             if (result.board) {
                 needToFill = false;
             }
