@@ -9,13 +9,22 @@ function renderGame(bsG) {
     const mainWrapper = document.createElement('div');
     mainWrapper.classList.add('main-wrapper');
     body.appendChild(mainWrapper);
-    const gameWrapper = document.createElement('div');
+
     const mainHeading = document.createElement('h2');
     mainHeading.textContent = 'BATTLESHIP';
     mainWrapper.appendChild(mainHeading);
+
+    const winConditions = document.createElement('p');
+    winConditions.classList.add('win-conditions');
+    winConditions.innerHTML = "<strong>Win Conditions:</strong> Successfully attack and sink all of your opponent's ships!";
+    mainWrapper.appendChild(winConditions);
+
     const instructions = document.createElement('p');
-    instructions.innerHTML = "<strong>Step 1:</strong> Populate your board by dragging your battleships onto the board.<br><strong>Step 2:</strong> Click to attack your opponent's board.<br><strong>Win Conditions:</strong> Successfully attack and sink all of your opponent's ships!";
+    instructions.classList.add('instructions');
+    instructions.innerHTML = '<strong>Step 1:</strong> Populate your board by dragging your battleships onto the board.';
     mainWrapper.appendChild(instructions);
+
+    const gameWrapper = document.createElement('div');
     gameWrapper.classList.add('game-wrapper');
     mainWrapper.appendChild(gameWrapper);
 
@@ -52,6 +61,15 @@ function renderPlayer(player, tag) {
     const playerWrapper = document.createElement('div');
     playerWrapper.classList.add('player-wrapper',tag)
     gameWrapper.appendChild(playerWrapper);
+
+    const playerHeading = document.createElement('h4');
+    if (tag==='rp') {
+        playerHeading.textContent = 'You';
+    }
+    else {
+        playerHeading.textContent = 'Computer';
+    }
+    playerWrapper.appendChild(playerHeading)
 }
 
 function renderBoard(player, tag) {
@@ -151,6 +169,8 @@ function renderShipInBoard(tag, ship, [x, y], direction) {
 }
 
 function renderAttackMode(btsGame) {
+    const instructions = document.querySelector('.instructions');
+    instructions.innerHTML = "<strong>Step 2:</strong> Click your opponent's board to attack and sink their ships!";
     renderAttackInBoard(btsGame.computerPlayer, 'cp');
 }
 

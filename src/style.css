@@ -5,11 +5,11 @@ body * {
     padding: 0;
 }
 .main-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
     background-color: #8cc7ff;
     padding: 30px;
-}
-.main-wrapper h2 {
-    margin-bottom: 10px;
 }
 .game-wrapper {
     display: flex;
