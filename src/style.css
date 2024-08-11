@@ -38,6 +38,9 @@ body * {
 .ship-in-board {
     background-color: #51abff;
 }
+.sunk {
+    background-color: #2874bb;
+}
 .board-cell.hit::after {
     content: '+';
 }

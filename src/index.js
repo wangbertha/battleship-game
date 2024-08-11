@@ -186,6 +186,9 @@ function renderAttackInBoard(player, tag) {
             if (result.hit) {
                 cell.classList.add('ship-in-board');
             }
+            if (result.sunk) {
+                renderSunk(player, 'cp', result.sunk);
+            }
             if (result.win) {
                 alert('You win!');
                 togglePlayAgain();
@@ -209,13 +212,29 @@ function renderAttackInBoard(player, tag) {
             if (resultReal.hit) {
                 attCell.classList.add('ship-in-board');
             }
+            if (resultReal.sunk) {
+                renderSunk(battleshipGame.realPlayer, 'rp', resultReal.sunk);
+            }
             if (resultReal.win) {
-                console.log(resultReal);
                 alert('The computer wins!');
                 togglePlayAgain();
                 return;
             }
         }, { once: true })
+    }
+}
+
+function renderSunk(player, tag, ship) {
+    let board = player.gameBoard.getBoard();
+    const SHIP_INDEX = 1;
+    for (let i=0; i<board.length; i++) {
+        for (let j=0; j<board.length; j++) {
+            if (board[i][j][SHIP_INDEX]===ship) {
+                const playerWrapper = document.querySelector(`.player-wrapper.${tag}`);
+                const sunkCell = playerWrapper.querySelector(`#${tag}-${i}-${j}`);
+                sunkCell.classList.add('sunk');
+            }
+        }
     }
 }
 

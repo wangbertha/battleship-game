@@ -32,6 +32,10 @@ function Gameboard(inputSize) {
         return tempBoard;
     }
 
+    function getBoard() {
+        return board;
+    }
+
     function deepcopyBoard(copyBoard) {
         let tempBoard = buildBoard(copyBoard.length);
         for (let i=0; i<copyBoard.length; i++) {
@@ -118,16 +122,16 @@ function Gameboard(inputSize) {
             if (ship.isSunk()) {
                 let newShips = playerShips.filter((s) => s !== ship);
                 if (newShips.length===0) {
-                    return { board: tempBoard, ships: newShips, hit: true, sunk: true, win: true };
+                    return { board: tempBoard, ships: newShips, hit: true, sunk: ship, win: true };
                 }
-                return { board: tempBoard, ships: newShips, hit: true, sunk: true, win: false };
+                return { board: tempBoard, ships: newShips, hit: true, sunk: ship, win: false };
             }
             return { board: tempBoard, ships: playerShips, hit: true, sunk: false, win: false };
         }
         return { board: tempBoard, ships: playerShips, hit: false, sunk: false, win: false };
     }
 
-    return { board, insertShip, receiveAttack };
+    return { board, getBoard, insertShip, receiveAttack };
 }
 
 function RealPlayer() {
