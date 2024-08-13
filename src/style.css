@@ -13,6 +13,7 @@ body * {
 }
 .game-wrapper {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     padding: 10px;
 }
@@ -52,4 +53,10 @@ body * {
     background-color: #3ca1ff;
     border-radius: 10px;
     font-size: 20px;
+}
+
+@media (max-width: 600px) {
+    .main-wrapper {
+        padding: 10px;
+    }
 }
